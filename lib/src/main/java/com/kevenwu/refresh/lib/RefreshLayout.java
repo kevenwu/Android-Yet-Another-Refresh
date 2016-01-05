@@ -43,6 +43,8 @@ public class RefreshLayout extends ViewGroup implements RefreshInterface {
     private Bitmap mHeaderBitmap;
     private BitmapDrawable mHeaderDrawable;
 
+    private boolean mPullToRefresh = false;
+
     private MotionEvent mLastMoveEvent;
     private boolean mDisableWhenHorizontalMove = false;
     private boolean mPreventForHorizontal = false;
@@ -233,25 +235,30 @@ public class RefreshLayout extends ViewGroup implements RefreshInterface {
     }
 
     private void layoutChildren() {
-        int offsetY = 0;
+        int offsetY = mRefreshIndicator.getCurrentPosY();
         int paddingLeft = getPaddingLeft();
         int paddingTop = getPaddingTop();
 
-        MarginLayoutParams lp = (MarginLayoutParams) mListView.getLayoutParams();
-        final int left = paddingLeft + lp.leftMargin;
-        final int top = paddingTop + lp.topMargin + offsetY;
-        final int right = left + mListView.getMeasuredWidth();
-        final int bottom = top + mListView.getMeasuredHeight();
-        mFloorHeaderView.layout(left, top, right, bottom);
-        mListView.layout(left, top, right, bottom);
-        mListView.bringToFront();
+        if (mListView != null) {
+            MarginLayoutParams lp = (MarginLayoutParams) mListView.getLayoutParams();
+            final int left = paddingLeft + lp.leftMargin;
+            final int top = paddingTop + lp.topMargin + offsetY;
+            final int right = left + mListView.getMeasuredWidth();
+            final int bottom = top + mListView.getMeasuredHeight();
+            mFloorHeaderView.layout(left, top - offsetY, right, bottom);
+            mListView.layout(left, top, right, bottom);
+            mListView.bringToFront();
+        }
 
-        MarginLayoutParams lp2 = (MarginLayoutParams) mProgressView.getLayoutParams();
-        final int left2 = paddingLeft + lp2.leftMargin;
-        final int top2 = paddingTop + lp2.topMargin + offsetY;
-        final int right2 = left2 + mProgressView.getMeasuredWidth();
-        final int bottom2 = top2 + mProgressView.getMeasuredHeight();
-        mProgressView.layout(left2, top2, right2, bottom2);
+        if (mProgressView != null) {
+            offsetY = 0;
+            MarginLayoutParams lp2 = (MarginLayoutParams) mProgressView.getLayoutParams();
+            final int left2 = paddingLeft + lp2.leftMargin;
+            final int top2 = paddingTop + lp2.topMargin + offsetY;
+            final int right2 = left2 + mProgressView.getMeasuredWidth();
+            final int bottom2 = top2 + mProgressView.getMeasuredHeight();
+            mProgressView.layout(left2, top2, right2, bottom2);
+        }
     }
 
 
@@ -391,7 +398,7 @@ public class RefreshLayout extends ViewGroup implements RefreshInterface {
         if (mStatus == PTR_STATUS_PREPARE) {
             // reach fresh height while moving from top to bottom
             if (isUnderTouch && mRefreshIndicator.crossRefreshLineFromTopToBottom()) {
-                tryToPerformRefresh();
+//                tryToPerformRefresh();
             }
         }
 

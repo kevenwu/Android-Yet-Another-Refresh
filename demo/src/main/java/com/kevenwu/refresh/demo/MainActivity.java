@@ -23,14 +23,26 @@ public class MainActivity extends Activity {
         RefreshLayout refreshLayout = (RefreshLayout)findViewById(R.id.refresh_layout);
         View headerView = LayoutInflater.from(this).inflate(R.layout.list_header, null);
         refreshLayout.setHeaderView(headerView, (ImageView)headerView.findViewById(R.id.fake), R.drawable.bg);
+        refreshLayout.setListener(new RefreshLayout.RefreshListener() {
+            @Override
+            public void onRefreshBegin(final RefreshLayout rlayout) {
+                long delay = (long) (1000 + Math.random() * 2000);
+                delay = Math.max(0, delay);
+                delay = 0;
+                rlayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        rlayout.refreshComplete();
+                    }
+                }, delay);
+            }
+        });
 
         String[] data = new String[20];
         for (int i = 0; i < data.length; i++) {
             data[i] = "测试item " + i;
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, R.layout.list_item,
-                data);
-
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, R.layout.list_item, data);
         ListView listView = (ListView)findViewById(R.id.list_view);
         listView.setAdapter(adapter);
     }
