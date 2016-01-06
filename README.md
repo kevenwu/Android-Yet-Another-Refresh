@@ -4,7 +4,7 @@ Library of effect of qzone like profile refresh.
 
 ## Demo
 
-![demo](.screen.gif)
+![demo](./screen.gif)
 
 ## Usage
 
