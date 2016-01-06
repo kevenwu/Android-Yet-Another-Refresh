@@ -4,7 +4,7 @@ Library of effect of qzone like profile refresh.
 
 ## Demo
 
-![Alt text](https://github.com/kevenwu/Android-Yet-Another-Refresh/screen.gif)
+![demo](.screen.gif)
 
 ## Usage
 
